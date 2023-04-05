@@ -1,8 +1,7 @@
 const routes = [
   {
     path: "/form",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/FormPage.vue") }],
+    component: () => import("pages/FormPage.vue"),
   },
   {
     path: "/",

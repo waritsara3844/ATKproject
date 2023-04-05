@@ -11,11 +11,11 @@
           <div class="col">Welcome to PSU ATK Form</div>
         </div>
         <div class="row q-mt-lg text-left text-bold">
-          <div class="col">Username</div>
+          <div class="col">Email</div>
         </div>
         <div class="row q-mt-md">
           <div class="col">
-            <q-input outlined v-model="text" label="Enter your Username" />
+            <q-input outlined v-model="email" label="Enter your Email" />
           </div>
         </div>
         <div class="row q-mt-lg text-left text-bold">
@@ -23,7 +23,7 @@
         </div>
         <div class="row q-mt-md">
           <div class="col">
-            <q-input outlined v-model="text" label="Enter your Password" />
+            <q-input outlined v-model="password" label="Enter your Password" />
           </div>
         </div>
         <div class="row q-mt-md">
@@ -35,6 +35,7 @@
               label="Sign in"
               no-caps
               style="width: 90%"
+              @click="this.signIn"
             />
           </div>
         </div>
@@ -45,20 +46,32 @@
 
 <script>
 import { defineComponent } from "vue";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default defineComponent({
   name: "IndexPage",
 
-  // data: {
-  //   return: {
-  //     email: "",
-  //     password: "",
-  //   },
-  // },
-  // method: {
-  //   // chekLogin() {
-  //   //   (this.email = email), (this.password = password);
-  //   // },
-  // },
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    signIn() {
+      signInWithEmailAndPassword(this.$auth, this.email, this.password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          this.$router.push("/form");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(error);
+        });
+    },
+  },
 });
 </script>

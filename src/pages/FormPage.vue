@@ -1,79 +1,40 @@
 <template>
-  <q-page>
-    <div class="q-pa-md">
-      <q-form @submit="onSubmit" @reset="onReset">
-        <div class="row q-ma-md">
-          <div class="col-3 q-mr-md">
-            <div class="text-left">Firstname</div>
-            <q-input filled v-model="firstname" label="Your firstname *" />
-          </div>
-          <div class="col-4 q-mr-md">
-            <div class="text-left">Lastname</div>
-            <q-input filled v-model="lastname" label="Your lastname *" />
-          </div>
-          <div class="col-4 q-mr-md">
-            <div class="text-left">Student ID</div>
-            <q-input filled v-model="studentID" label="Your student ID *" />
-          </div>
+  <q-layout view="lHh Lpr lFf">
+    <q-page-container>
+      <q-page>
+        <div class="q-pa-md">
+          <q-form @submit="onSubmit" @reset="onReset">
+            <Input />
+            <!---- Dropdrawn -->
+            <BtnDropdrawn />
+            <!---- Dropdrawn -->
+            <DateTime />
+            <div class="col-3 q-mr-md q-my-md q-gutter-md" align="left">
+              <q-btn type="submit" color="primary" rounded>Submit</q-btn
+              ><q-btn type="submit" color="deep-orange" rounded
+                >Clear Form</q-btn
+              >
+            </div>
+          </q-form>
         </div>
-        <div class="row q-ma-md">
-          <div class="col-3 q-mr-md">
-            <div class="text-left">Faculty</div>
-            <q-btn-dropdown label="Select Faculty">
-              <q-list>
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Photos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Videos</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item clickable v-close-popup @click="onItemClick">
-                  <q-item-section>
-                    <q-item-label>Articles</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </div>
-          <div class="col-4 q-mr-md">
-            <div class="text-left">Major</div>
-            <q-input filled v-model="major" label="Your major *" />
-          </div>
-          <div class="col-4 q-mr-md">
-            Year
-            <q-input filled v-model="Year" label="Your year *" />
-          </div>
-        </div>
-        <div class="row q-ma-md">
-          <div class="col-3 q-mr-md">
-            <div class="text-left">Date</div>
-            <q-input filled v-model="date" label="Select Date *" />
-          </div>
-          <div class="col-4 q-mr-md">
-            <div class="text-left">Time</div>
-            <q-input filled v-model="time" label="Selected time *" />
-          </div>
-          <div class="col-4 q-mr-md">
-            <div class="text-left">ATK Result</div>
-            <q-input filled v-model="img" label="Upload Image *" />
-          </div>
-        </div>
-      </q-form>
-    </div>
-  </q-page>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import Input from "src/components/Input.vue";
+import BtnDropdrawn from "src/components/BtnDropdrawn.vue";
+import DateTime from "src/components/DateTime.vue";
 
 export default defineComponent({
   name: "FormPage",
+  components: { Input, BtnDropdrawn, DateTime },
+
+  data() {
+    return {};
+  },
 });
 </script>
 
