@@ -1,21 +1,41 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
-      <q-page>
-        <div class="q-pa-md">
-          <q-form @submit="onSubmit" @reset="onReset">
-            <Input />
-            <!---- Dropdrawn -->
-            <BtnDropdrawn />
-            <!---- Dropdrawn -->
-            <DateTime />
-            <div class="col-3 q-mr-md q-my-md q-gutter-md" align="left">
-              <q-btn type="submit" color="primary" rounded>Submit</q-btn
-              ><q-btn type="submit" color="deep-orange" rounded
-                >Clear Form</q-btn
-              >
-            </div>
-          </q-form>
+      <q-page class="q-ma-md flex flex-center">
+        <div class="row-12">
+          <div class="col">
+            <q-card>
+              <q-card-section class="text-center">
+                <div class="text-h6 text-bold text-center">
+                  Total ATK Submissions:
+                </div>
+
+                {{ 12 }}
+              </q-card-section>
+              <q-separator />
+            </q-card>
+          </div>
+          <div class="col q-mt-md">
+            <q-form @submit="submitForm">
+              <div class="row text-bold text-h6">ATK Report</div>
+              <q-input v-model="username" label="Username" />
+              <q-input v-model="studentId" label="Student ID" />
+              <q-uploader
+                :value="selectedImage"
+                :max-file-size="maxFileSize"
+                :extensions="allowedExtensions"
+                @input="onImageInput"
+                label="Upload Image"
+                class="q-mt-md"
+              />
+              <q-btn
+                type="submit"
+                label="Submit"
+                class="q-mt-md"
+                color="primary"
+              />
+            </q-form>
+          </div>
         </div>
       </q-page>
     </q-page-container>
@@ -23,19 +43,33 @@
 </template>
 
 <script>
+import { QForm, QInput, QUploader, QBtn } from "quasar";
 import { defineComponent } from "vue";
-import Input from "src/components/Input.vue";
-import BtnDropdrawn from "src/components/BtnDropdrawn.vue";
-import DateTime from "src/components/DateTime.vue";
 
 export default defineComponent({
   name: "FormPage",
-  components: { Input, BtnDropdrawn, DateTime },
-
+  components: {
+    QForm,
+    QInput,
+    QUploader,
+    QBtn,
+  },
   data() {
-    return {};
+    return {
+      username: "",
+      studentId: "",
+      selectedImage: null,
+      maxFileSize: 5000000, // 5 MB
+      allowedExtensions: ["jpg", "jpeg", "png"],
+    };
+  },
+  methods: {
+    submitForm() {
+      // submit form logic
+    },
+    onImageInput(selectedFiles) {
+      this.selectedImage = selectedFiles[0];
+    },
   },
 });
 </script>
-
-<style></style>
