@@ -20,6 +20,12 @@
               <div class="row text-bold text-h6">ATK Report</div>
               <q-input v-model="username" label="Username" />
               <q-input v-model="studentId" label="Student ID" />
+              <q-option-group
+                v-model="atkreuslt"
+                color="secondary"
+                :options="options"
+                inline
+              />
               <q-uploader
                 :value="selectedImage"
                 :max-file-size="maxFileSize"
@@ -28,6 +34,7 @@
                 label="Upload Image"
                 class="q-mt-md"
               />
+              {{selectedImage}}
               <q-btn
                 type="submit"
                 label="Submit"
@@ -45,9 +52,25 @@
 <script>
 import { QForm, QInput, QUploader, QBtn } from "quasar";
 import { defineComponent } from "vue";
+import { ref } from 'vue'
 
 export default defineComponent({
   name: "FormPage",
+  setup(){
+    return{
+      atkreuslt: ref('negative'),
+      options:[
+        {
+          label: 'Negative(-)',
+          value: 'negative'
+        },
+        {
+          label: 'Positive(+)',
+          value: 'positive'
+        }
+      ]
+    }
+  },
   components: {
     QForm,
     QInput,
@@ -68,7 +91,11 @@ export default defineComponent({
       // submit form logic
     },
     onImageInput(selectedFiles) {
+      console.log(`${selectedFiles[0]}`);
+      
       this.selectedImage = selectedFiles[0];
+      console.log(`${this.selectedImage}`);
+      
     },
   },
 });
