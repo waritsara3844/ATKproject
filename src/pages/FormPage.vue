@@ -4,13 +4,13 @@
       <q-page class="flex flex-center q-mx-md" padding>
         <div class="row-12">
           <div class="col">
-            <q-card>
+            <q-card style="background-color: aquamarine">
               <q-card-section class="text-center">
                 <div class="text-h6 text-bold text-center">
                   Total ATK Submissions:
                 </div>
 
-                {{ 12 }}
+                {{ num }}
               </q-card-section>
               <q-separator />
             </q-card>
@@ -43,9 +43,18 @@
                 type="submit"
                 label="Submit"
                 class="q-mt-md"
-                color="primary"
+                style="background-color: aquamarine"
               />
             </q-form>
+          </div>
+          <div class="q-ma-md q-pa-md">
+            <q-btn
+              class="full-width"
+              flat
+              style="background-color: bisque; color: black"
+              label="log out"
+              @click="this.signOut()"
+            />
           </div>
         </div>
       </q-page>
@@ -56,7 +65,11 @@
 <script>
 import { QForm, QInput, QBtn } from "quasar";
 import { defineComponent } from "vue";
-import { ref } from "vue";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { addDoc, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
+import { onAuthStateChanged } from "@firebase/auth";
+import { signOut } from "firebase/auth";
 
 export default defineComponent({
   name: "FormPage",
@@ -67,7 +80,6 @@ export default defineComponent({
   },
   setup() {
     return {
-      atkreuslt: ref("negative"),
       options: [
         {
           label: "Negative(-)",
@@ -86,10 +98,15 @@ export default defineComponent({
       studentId: "",
       imageUrl: "",
       upload_atk: null,
+      atkreuslt: "negative",
+      num: 0,
     };
   },
   methods: {
-    submitForm() {},
+    submitForm() {
+      this.pushData();
+      this.uploadImage();
+    },
 
     uploadFile() {
       this.imageUrl = URL.createObjectURL(this.upload_atk);
@@ -105,6 +122,61 @@ export default defineComponent({
         message: msg,
       });
     },
+    uploadImage() {
+      const storage = getStorage();
+      const storageRef = ref(storage, this.upload_atk.name);
+      const metadata = {
+        contentType: "image/jpeg",
+      };
+      uploadBytes(storageRef, this.upload_atk, metadata).then((s) => {
+        this.clear();
+      });
+    },
+    clear() {
+      this.username = "";
+      this.studentId = "";
+      this.upload_atk = "";
+      this.atkreuslt = "negative";
+    },
+    pushData() {
+      onAuthStateChanged(this.$auth, async (user) => {
+        if (user) {
+          addDoc(collection(this.$db, "atk_result"), {
+            username: this.username,
+            studentId: this.studentId,
+            atk_result: this.atkreuslt,
+            image: this.upload_atk.name,
+          });
+        }
+      });
+      this.getResultAmount();
+    },
+    getResultAmount() {
+      onAuthStateChanged(this.$auth, async (user) => {
+        if (user) {
+          const resRef = collection(this.$db, "atk_result");
+          const q_res = query(resRef);
+          const snap = await getDocs(q_res);
+          var num = 0;
+          snap.forEach(async (docs) => {
+            num += 1;
+          });
+          this.num = num;
+        }
+      });
+    },
+    signOut() {
+      signOut(this.$auth)
+        .then(() => {
+          this.$router.push("/");
+        })
+        .catch((error) => {
+          // An error happened.
+        });
+    },
+  },
+  created() {
+    this.getResultAmount();
   },
 });
 </script>
